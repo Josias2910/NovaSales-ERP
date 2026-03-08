@@ -12,24 +12,22 @@ namespace CapaPresentacion.Forms
 {
     public partial class mdImagenProducto : Form
     {
-        private int _productoId; // Aquí guardaremos el ID
+        private int _productoId;
 
-        // Modificamos el constructor para que pida el ID
         public mdImagenProducto(int idProducto, string nombreProducto)
         {
             InitializeComponent();
             _productoId = idProducto;
-            this.Text = "Imagen de: " + nombreProducto; // Un detalle pro
+            this.Text = "Imagen de: " + nombreProducto;
         }
 
         private void mdImagenProducto_Load(object sender, EventArgs e)
         {
-            CargarImagenActual(); // Cargamos la imagen actual al abrir el modal
+            CargarImagenActual();
         }
 
         private void btnSubirImagen_Click(object sender, EventArgs e)
         {
-            // 1. Abrimos el buscador de archivos inmediatamente
             using (OpenFileDialog ofd = new OpenFileDialog())
             {
                 ofd.Filter = "Imágenes (*.jpg;*.jpeg;*.png)|*.jpg;*.jpeg;*.png";
@@ -41,22 +39,17 @@ namespace CapaPresentacion.Forms
                     {
                         byte[] imagenBytes;
 
-                        // 2. Cargamos el archivo seleccionado y lo convertimos a Bytes
-                        // Usamos 'using' para asegurar que el archivo no quede bloqueado en el disco
                         using (Image imgOriginal = Image.FromFile(ofd.FileName))
                         {
-                            // Mostramos la imagen en el PictureBox para que el usuario vea qué subió
                             picImagen.Image = new Bitmap(imgOriginal);
 
                             using (MemoryStream ms = new MemoryStream())
                             {
-                                // Guardamos como Jpeg para optimizar tamaño en la base de datos
                                 picImagen.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
                                 imagenBytes = ms.ToArray();
                             }
                         }
 
-                        // 3. Guardado directo en Base de Datos vía Service
                         using (var context = new AppDbContext())
                         {
                             var service = new ProductoService(context);
@@ -66,7 +59,6 @@ namespace CapaPresentacion.Forms
                             {
                                 MessageBox.Show("Imagen actualizada y guardada correctamente", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 this.DialogResult = DialogResult.OK;
-                                // Opcional: podrías cerrar el form o dejarlo abierto para que vea el resultado
                             }
                             else
                             {
@@ -96,7 +88,7 @@ namespace CapaPresentacion.Forms
 
                     if (exito)
                     {
-                        picImagen.Image = null; // Limpiamos la vista
+                        picImagen.Image = null;
                         MessageBox.Show("Imagen eliminada correctamente.", "Sistema");
                         this.DialogResult = DialogResult.OK;
                         this.Close();
@@ -119,7 +111,6 @@ namespace CapaPresentacion.Forms
 
                     if (imagenBytes != null && imagenBytes.Length > 0)
                     {
-                        // El truco: Convertir los bytes de la BD en una Imagen de C#
                         using (MemoryStream ms = new MemoryStream(imagenBytes))
                         {
                             picImagen.Image = Image.FromStream(ms);
@@ -127,7 +118,6 @@ namespace CapaPresentacion.Forms
                     }
                     else
                     {
-                        // Si no hay imagen, podés poner una por defecto o dejarlo vacío
                         picImagen.Image = null;
                     }
                 }

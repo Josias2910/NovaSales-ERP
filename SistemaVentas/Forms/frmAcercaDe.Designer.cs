@@ -28,18 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges11 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges12 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges13 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges1 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges2 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges3 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmAcercaDe));
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges14 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
-            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges15 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
+            Guna.UI2.WinForms.Suite.CustomizableEdges customizableEdges4 = new Guna.UI2.WinForms.Suite.CustomizableEdges();
             guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             guna2PictureBox1 = new Guna.UI2.WinForms.Guna2PictureBox();
             lbVersion = new Guna.UI2.WinForms.Guna2HtmlLabel();
             guna2HtmlLabel1 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             richTextBox1 = new RichTextBox();
-            btnCerrar = new Guna.UI2.WinForms.Guna2CircleButton();
             guna2HtmlLabel2 = new Guna.UI2.WinForms.Guna2HtmlLabel();
             lbNumeroSerie = new Guna.UI2.WinForms.Guna2HtmlLabel();
             ((System.ComponentModel.ISupportInitialize)guna2PictureBox1).BeginInit();
@@ -48,24 +46,24 @@
             // guna2Panel1
             // 
             guna2Panel1.BackColor = Color.LimeGreen;
-            guna2Panel1.CustomizableEdges = customizableEdges11;
+            guna2Panel1.CustomizableEdges = customizableEdges1;
             guna2Panel1.Dock = DockStyle.Top;
             guna2Panel1.FillColor = Color.FromArgb(45, 45, 45);
             guna2Panel1.Location = new Point(0, 0);
             guna2Panel1.Name = "guna2Panel1";
-            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges12;
+            guna2Panel1.ShadowDecoration.CustomizableEdges = customizableEdges2;
             guna2Panel1.Size = new Size(500, 2);
             guna2Panel1.TabIndex = 2;
             // 
             // guna2PictureBox1
             // 
             guna2PictureBox1.BackColor = Color.Transparent;
-            guna2PictureBox1.CustomizableEdges = customizableEdges13;
+            guna2PictureBox1.CustomizableEdges = customizableEdges3;
             guna2PictureBox1.Image = (Image)resources.GetObject("guna2PictureBox1.Image");
             guna2PictureBox1.ImageRotate = 0F;
             guna2PictureBox1.Location = new Point(12, 12);
             guna2PictureBox1.Name = "guna2PictureBox1";
-            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges14;
+            guna2PictureBox1.ShadowDecoration.CustomizableEdges = customizableEdges4;
             guna2PictureBox1.Size = new Size(102, 100);
             guna2PictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             guna2PictureBox1.TabIndex = 4;
@@ -107,29 +105,6 @@
             richTextBox1.TabIndex = 9;
             richTextBox1.Text = resources.GetString("richTextBox1.Text");
             // 
-            // btnCerrar
-            // 
-            btnCerrar.Animated = true;
-            btnCerrar.BackColor = Color.Transparent;
-            btnCerrar.Cursor = Cursors.Hand;
-            btnCerrar.DisabledState.BorderColor = Color.DarkGray;
-            btnCerrar.DisabledState.CustomBorderColor = Color.DarkGray;
-            btnCerrar.DisabledState.FillColor = Color.FromArgb(169, 169, 169);
-            btnCerrar.DisabledState.ForeColor = Color.FromArgb(141, 141, 141);
-            btnCerrar.FillColor = Color.White;
-            btnCerrar.Font = new Font("Segoe UI", 9F);
-            btnCerrar.ForeColor = Color.White;
-            btnCerrar.HoverState.FillColor = Color.Red;
-            btnCerrar.Image = Properties.Resources.x_button;
-            btnCerrar.ImageSize = new Size(38, 38);
-            btnCerrar.Location = new Point(448, 12);
-            btnCerrar.Name = "btnCerrar";
-            btnCerrar.ShadowDecoration.CustomizableEdges = customizableEdges15;
-            btnCerrar.ShadowDecoration.Mode = Guna.UI2.WinForms.Enums.ShadowMode.Circle;
-            btnCerrar.Size = new Size(40, 40);
-            btnCerrar.TabIndex = 32;
-            btnCerrar.Visible = false;
-            // 
             // guna2HtmlLabel2
             // 
             guna2HtmlLabel2.BackColor = Color.Transparent;
@@ -160,7 +135,6 @@
             ClientSize = new Size(500, 350);
             Controls.Add(lbNumeroSerie);
             Controls.Add(guna2HtmlLabel2);
-            Controls.Add(btnCerrar);
             Controls.Add(richTextBox1);
             Controls.Add(guna2HtmlLabel1);
             Controls.Add(lbVersion);
@@ -182,7 +156,6 @@
         private Guna.UI2.WinForms.Guna2HtmlLabel lbVersion;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel1;
         private RichTextBox richTextBox1;
-        private Guna.UI2.WinForms.Guna2CircleButton btnCerrar;
         private Guna.UI2.WinForms.Guna2HtmlLabel guna2HtmlLabel2;
         private Guna.UI2.WinForms.Guna2HtmlLabel lbNumeroSerie;
     }

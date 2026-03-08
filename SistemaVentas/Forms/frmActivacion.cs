@@ -25,7 +25,6 @@ namespace CapaPresentacion.Forms
             if (!string.IsNullOrEmpty(tbHardwareId.Text))
             {
                 Clipboard.SetText(tbHardwareId.Text);
-                // Opcional: un pequeño tooltip o mensaje rápido
                 MessageBox.Show("ID de equipo copiado al portapapeles.", "Copiado", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -33,9 +32,8 @@ namespace CapaPresentacion.Forms
         private void btnActivarSoftware_Click(object sender, EventArgs e)
         {
             string input = tbLicencia.Text.Trim();
-            string salt = "B23UFKS8453K@SLF3NOVA"; // Tu Salt ultra-seguro
+            string salt = "B23UFKS8453K@SLF3NOVA";
 
-            // 1. Validación básica de formato (Debe ser HASH-FECHA)
             if (string.IsNullOrEmpty(input) || !input.Contains("-"))
             {
                 MessageBox.Show("Formato de llave incorrecto.", "Atención", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -46,10 +44,9 @@ namespace CapaPresentacion.Forms
             {
                 string[] partes = input.Split('-');
                 string hashDelCliente = partes[0];
-                string fechaDelCliente = partes[1]; // Formato esperado: AAAAMMDD
+                string fechaDelCliente = partes[1];
                 string idPC = tbHardwareId.Text;
 
-                // 2. Re-calculamos el hash localmente para validar integridad
                 string hashLocal = "";
                 using (SHA256 sha256 = SHA256.Create())
                 {
@@ -57,13 +54,10 @@ namespace CapaPresentacion.Forms
                     hashLocal = BitConverter.ToString(hashBytes).Replace("-", "").Substring(0, 16);
                 }
 
-                // 3. Verificación de seguridad
                 if (hashDelCliente == hashLocal)
                 {
-                    // Convertimos la fecha del string a DateTime
                     DateTime fechaVence = DateTime.ParseExact(fechaDelCliente, "yyyyMMdd", null);
 
-                    // 4. Guardado en Base de Datos
                     bool exito = false;
                     using (var context = new AppDbContext())
                     {

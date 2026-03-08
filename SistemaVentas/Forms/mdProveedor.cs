@@ -87,7 +87,7 @@ namespace CapaPresentacion.Forms
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(35, 30, 15);
                 row.DefaultCellStyle.ForeColor = Color.FromArgb(212, 175, 55);
-                row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20); // Un poco más claro al seleccionar
+                row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20);
                 row.DefaultCellStyle.SelectionForeColor = Color.FromArgb(255, 215, 0);
             }
             else
@@ -101,13 +101,10 @@ namespace CapaPresentacion.Forms
 
         private void dgvMdProveedores_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Verificamos que el clic sea en una columna de tipo botón y no en el encabezado
             if (dgvMdProveedores.Columns[e.ColumnIndex].Name == "btnSeleccionar" && e.RowIndex >= 0)
             {
-                // Guardamos el objeto completo de la fila seleccionada
                 Proveedor = (ProveedorListadoDto)dgvMdProveedores.Rows[e.RowIndex].DataBoundItem;
 
-                // Le decimos al formulario que la operación fue exitosa y lo cerramos
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }

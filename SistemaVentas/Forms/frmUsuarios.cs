@@ -349,7 +349,7 @@ namespace CapaPresentacion.Forms
             tbConfirmarContraUsuario.Clear();
             btnGuardarUsuario.Text = "GUARDAR";
             btnEliminarUsuario.Text = "ELIMINAR";
-            btnEliminarUsuario.BorderColor = Color.FromArgb(45, 45, 45); // O el color dorado suave que uses
+            btnEliminarUsuario.BorderColor = Color.FromArgb(45, 45, 45);
             btnEliminarUsuario.ForeColor = Color.Gainsboro;
             btnEliminarUsuario.FillColor = Color.FromArgb(30, 30, 30);
             tbUsuarioDocumento.Focus();

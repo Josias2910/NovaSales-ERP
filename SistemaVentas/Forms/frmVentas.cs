@@ -107,7 +107,6 @@ namespace CapaPresentacion.Forms
                 return;
             }
 
-            // VALIDACIÓN DE STOCK
             if (!int.TryParse(tbVentaStock.Text, out int stockActual) || stockActual < updVentaCantidad.Value)
             {
                 MessageBox.Show("Stock no válido o insuficiente");
@@ -385,10 +384,9 @@ namespace CapaPresentacion.Forms
                 tbVentaCodProducto.Text = fila.Cells["Codigo"].Value.ToString();
                 tbVentaProducto.Text = fila.Cells["Producto"].Value.ToString();
                 tbVentaPrecio.Text = fila.Cells["Precio"].Value.ToString();
-                tbVentaStock.Text = fila.Cells["Stock"].Value.ToString(); // <--- ESTO EVITA TU ERROR
+                tbVentaStock.Text = fila.Cells["Stock"].Value.ToString();
                 updVentaCantidad.Value = Convert.ToDecimal(fila.Cells["Cantidad"].Value);
 
-                // UI State
                 btnAgregarProducto.Image = Properties.Resources.arrow;
                 lbAgregar.Text = "Actualizar";
                 btnCancelar.Visible = true;

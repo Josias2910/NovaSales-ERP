@@ -101,7 +101,6 @@ namespace CapaNegocio.Services
                 NombreCompleto = guardar.NombreCompleto,
                 Correo = guardar.Correo,
                 Documento = guardar.Documento,
-                // --- PROTECCIÓN AQUÍ ---
                 Clave = SeguridadPassword.HashPassword(guardar.Clave),
                 RolId = guardar.RolId,
                 Estado = true,

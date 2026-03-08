@@ -37,14 +37,12 @@ namespace CapaPresentacion.Forms
                 {
                     var service = new ReporteService(context);
 
-                    // Llamamos al nuevo método del Service que creamos para Compras
                     var lista = service.ObtenerCompras(inicio, fin, idProveedor);
 
                     dgvReporteCompras.DataSource = lista;
 
                     if (lista != null && lista.Count > 0)
                     {
-                        // Reutilizamos la lógica de Dashboard pero adaptada a compras
                         CalcularResumenCompras(lista);
                         CargarDashboardCompletoCompras(lista, service);
                     }
@@ -69,35 +67,28 @@ namespace CapaPresentacion.Forms
                 return;
             }
 
-            // 1. Inversión del Periodo (Lo que filtraste en la grilla)
             decimal inversionPeriodo = lista.Sum(c => c.SubTotal);
             lbMontoTotal.Text = inversionPeriodo.ToString("C2");
 
-            // 2. Unidades Adquiridas (Suma de todas las cantidades)
             lbOrdenesCompra.Text = lista.Sum(c => c.Cantidad).ToString();
 
-            // 3. Proveedor Estrella (Al que más dinero le diste)
             var mayorProv = lista.GroupBy(c => c.RazonSocial)
                                  .OrderByDescending(g => g.Sum(x => x.SubTotal))
                                  .First().Key;
             lbProveedorPrincipal.Text = mayorProv;
 
-            // 4. Producto de Mayor Inversión
             var prodMasCaro = lista.GroupBy(c => c.NombreProducto)
                                    .OrderByDescending(g => g.Sum(x => x.SubTotal))
                                    .First().Key;
             lbMayorCompra.Text = prodMasCaro;
 
-            // 5. VALORIZACIÓN DE STOCK (Capital total en estantería - Independiente del filtro)
             using (var context = new AppDbContext())
             {
                 decimal valorStockActual = context.Productos
                                            .AsNoTracking()
                                            .Sum(p => p.Stock * p.PrecioCompra);
 
-                // Asignamos al label que antes decía "Ganancia Neta"
                 lbGananciaNeta.Text = valorStockActual.ToString("C2");
-                // TIP: Cambia el texto de la etiqueta (Label de título) a "VALOR TOTAL STOCK"
             }
         }
         private void CargarDashboardCompletoCompras(List<ReporteCompraDto> lista, ReporteService service)
@@ -105,24 +96,20 @@ namespace CapaPresentacion.Forms
             flowLayoutPanel1.Controls.Clear();
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.WrapContents = false;
-            flowLayoutPanel1.AutoScroll = true; // Asegúrate de que esté en True aquí
+            flowLayoutPanel1.AutoScroll = true; 
             flowLayoutPanel1.Padding = new Padding(10);
 
-            // 1. Ticket Promedio
             int totalFacturas = lista.Select(c => c.NumeroDocumento).Distinct().Count();
             decimal ticketPromedio = lista.Sum(c => c.SubTotal) / totalFacturas;
             AgregarIndicadorCustom("Gasto Promedio p/Factura", ticketPromedio.ToString("C2"), Color.FromArgb(0, 191, 255));
 
-            // 2. Comparativa
             decimal inversionActual = lista.Sum(c => c.SubTotal);
             decimal inversionAnterior = service.ObtenerTotalInversionMesAnterior();
             AgregarComparativaCustom(inversionActual, inversionAnterior);
 
-            // 3. NUEVO: Variedad de productos (Para forzar el scroll y dar info)
             int productosDistintos = lista.Select(c => c.CodigoProducto).Distinct().Count();
             AgregarIndicadorCustom("Variedad de Artículos", productosDistintos.ToString() + " items", Color.LightSteelBlue);
 
-            // 4. ESPACIADOR (Para que el último no se corte)
             Label lblEspacio = new Label { Text = " ", Height = 20 };
             flowLayoutPanel1.Controls.Add(lblEspacio);
         }
@@ -153,7 +140,6 @@ namespace CapaPresentacion.Forms
             {
                 decimal diferencia = actual - anterior;
                 decimal porcentaje = (diferencia / anterior) * 100;
-                // En compras, gastar menos es verde (-%) y gastar más es tomate (+%)
                 bool ahorro = porcentaje <= 0;
 
                 Label lblPorc = new Label
@@ -212,7 +198,7 @@ namespace CapaPresentacion.Forms
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(35, 30, 15);
                 row.DefaultCellStyle.ForeColor = Color.FromArgb(212, 175, 55);
-                row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20); // Un poco más claro al seleccionar
+                row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20);
                 row.DefaultCellStyle.SelectionForeColor = Color.FromArgb(255, 215, 0);
             }
             else

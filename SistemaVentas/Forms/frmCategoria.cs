@@ -129,7 +129,7 @@ namespace CapaPresentacion.Forms
             tbCategoriaDescripcion.Clear();
             btnGuardarCategoria.Text = "GUARDAR";
             btnEliminarCategoria.Text = "ELIMINAR";
-            btnEliminarCategoria.BorderColor = Color.FromArgb(45, 45, 45); // O el color dorado suave que uses
+            btnEliminarCategoria.BorderColor = Color.FromArgb(45, 45, 45);
             btnEliminarCategoria.ForeColor = Color.Gainsboro;
             btnEliminarCategoria.FillColor = Color.FromArgb(30, 30, 30);
             tbCategoriaDescripcion.Focus();

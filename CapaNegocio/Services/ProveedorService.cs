@@ -59,7 +59,6 @@ namespace CapaNegocio.Services
                 Id = p.Id,
                 Documento = p.Documento,
                 RazonSocial = p.RazonSocial,
-                // Si minimal es true, mandamos null o vacío a lo que no necesitamos
                 Telefono = minimal ? "" : p.Telefono,
                 Correo = minimal ? "" : p.Correo,
                 Estado = minimal ? "" : (p.Estado ? "Activo" : "Inactivo")

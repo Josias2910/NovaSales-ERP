@@ -14,7 +14,6 @@ public static class GeneradorReporte
         {
             container.Page(page =>
             {
-                // Ajustamos el tamaño a uno más estándar de factura/ticket
                 page.Size(400, 650);
                 page.Margin(0.7f, Unit.Centimetre);
                 page.PageColor(Colors.White);
@@ -57,10 +56,8 @@ public static class GeneradorReporte
                         row.RelativeItem().Column(col => {
                             col.Item().Text($"{compra.TipoDocumento.ToUpper()}").FontSize(10).ExtraBold();
 
-                            // Usamos el NumeroDocumento que generó el Service
                             col.Item().Text($"NRO: {compra.NumeroDocumento}").FontSize(9).Bold();
 
-                            // --- NUEVO: MÉTODO DE PAGO ---
                             col.Item().PaddingTop(2).Text(txt => {
                                 txt.Span("MÉTODO DE PAGO: ").FontSize(8).Bold();
                                 txt.Span($"{compra.MetodoPago ?? "S/D"}").FontSize(8);
@@ -79,7 +76,7 @@ public static class GeneradorReporte
                         table.ColumnsDefinition(columns => {
                             columns.ConstantColumn(35);
                             columns.RelativeColumn();
-                            columns.ConstantColumn(65); // Un poco más ancho para precios
+                            columns.ConstantColumn(65);
                             columns.ConstantColumn(65);
                         });
 
@@ -113,7 +110,7 @@ public static class GeneradorReporte
                         });
                     });
 
-                    // ESPACIO DE FIRMA (Fundamental en Compras)
+                    // ESPACIO DE FIRMA
                     c.Item().PaddingTop(40).Row(row => {
                         row.RelativeItem().PaddingHorizontal(20).Column(col => {
                             col.Item().LineHorizontal(0.5f);
@@ -147,7 +144,6 @@ public static class GeneradorReporte
         {
             container.Page(page =>
             {
-                // Ajustamos el tamaño a uno más estándar de factura/ticket
                 page.Size(400, 650);
                 page.Margin(0.7f, Unit.Centimetre);
                 page.PageColor(Colors.White);
@@ -190,10 +186,8 @@ public static class GeneradorReporte
                         row.RelativeItem().Column(col => {
                             col.Item().Text($"{compra.TipoDocumento.ToUpper()}").FontSize(10).ExtraBold();
 
-                            // Usamos el NumeroDocumento que generó el Service
                             col.Item().Text($"NRO: {compra.NumeroDocumento}").FontSize(9).Bold();
 
-                            // --- NUEVO: MÉTODO DE PAGO ---
                             col.Item().PaddingTop(2).Text(txt => {
                                 txt.Span("MÉTODO DE PAGO: ").FontSize(8).Bold();
                                 txt.Span($"{compra.MetodoPago ?? "S/D"}").FontSize(8);
@@ -212,7 +206,7 @@ public static class GeneradorReporte
                         table.ColumnsDefinition(columns => {
                             columns.ConstantColumn(35);
                             columns.RelativeColumn();
-                            columns.ConstantColumn(65); // Un poco más ancho para precios
+                            columns.ConstantColumn(65);
                             columns.ConstantColumn(65);
                         });
 
@@ -246,7 +240,7 @@ public static class GeneradorReporte
                         });
                     });
 
-                    // ESPACIO DE FIRMA (Fundamental en Compras)
+                    // ESPACIO DE FIRMA
                     c.Item().PaddingTop(40).Row(row => {
                         row.RelativeItem().PaddingHorizontal(20).Column(col => {
                             col.Item().LineHorizontal(0.5f);
@@ -279,7 +273,6 @@ public static class GeneradorReporte
         {
             container.Page(page =>
             {
-                // Ajustamos el tamaño a uno más estándar de factura/ticket
                 page.Size(400, 650);
                 page.Margin(0.7f, Unit.Centimetre);
                 page.PageColor(Colors.White);
@@ -322,10 +315,8 @@ public static class GeneradorReporte
                         row.RelativeItem().Column(col => {
                             col.Item().Text($"{venta.TipoDocumento.ToUpper()}").FontSize(10).ExtraBold();
 
-                            // Usamos el NumeroDocumento que generó el Service
                             col.Item().Text($"NRO: {venta.NumeroDocumento}").FontSize(9).Bold();
 
-                            // --- NUEVO: MÉTODO DE PAGO ---
                             col.Item().PaddingTop(2).Text(txt => {
                                 txt.Span("MÉTODO DE PAGO: ").FontSize(8).Bold();
                                 txt.Span($"{venta.MetodoPago ?? "S/D"}").FontSize(8);
@@ -344,7 +335,7 @@ public static class GeneradorReporte
                         table.ColumnsDefinition(columns => {
                             columns.ConstantColumn(35);
                             columns.RelativeColumn();
-                            columns.ConstantColumn(65); // Un poco más ancho para precios
+                            columns.ConstantColumn(65);
                             columns.ConstantColumn(65);
                         });
 
@@ -378,7 +369,7 @@ public static class GeneradorReporte
                         });
                     });
 
-                    // ESPACIO DE FIRMA (Fundamental en Compras)
+                    // ESPACIO DE FIRMA
                     c.Item().PaddingTop(40).Row(row => {
                         row.RelativeItem().PaddingHorizontal(20).Column(col => {
                             col.Item().LineHorizontal(0.5f);
@@ -411,7 +402,6 @@ public static class GeneradorReporte
         {
             container.Page(page =>
             {
-                // Ajustamos el tamaño a uno más estándar de factura/ticket
                 page.Size(400, 650);
                 page.Margin(0.7f, Unit.Centimetre);
                 page.PageColor(Colors.White);
@@ -454,10 +444,8 @@ public static class GeneradorReporte
                         row.RelativeItem().Column(col => {
                             col.Item().Text($"{venta.TipoDocumento.ToUpper()}").FontSize(10).ExtraBold();
 
-                            // Usamos el NumeroDocumento que generó el Service
                             col.Item().Text($"NRO: {venta.NumeroDocumento}").FontSize(9).Bold();
 
-                            // --- NUEVO: MÉTODO DE PAGO ---
                             col.Item().PaddingTop(2).Text(txt => {
                                 txt.Span("MÉTODO DE PAGO: ").FontSize(8).Bold();
                                 txt.Span($"{venta.MetodoPago ?? "S/D"}").FontSize(8);
@@ -476,7 +464,7 @@ public static class GeneradorReporte
                         table.ColumnsDefinition(columns => {
                             columns.ConstantColumn(35);
                             columns.RelativeColumn();
-                            columns.ConstantColumn(65); // Un poco más ancho para precios
+                            columns.ConstantColumn(65);
                             columns.ConstantColumn(65);
                         });
 
@@ -510,7 +498,7 @@ public static class GeneradorReporte
                         });
                     });
 
-                    // ESPACIO DE FIRMA (Fundamental en Compras)
+                    // ESPACIO DE FIRMA
                     c.Item().PaddingTop(40).Row(row => {
                         row.RelativeItem().PaddingHorizontal(20).Column(col => {
                             col.Item().LineHorizontal(0.5f);

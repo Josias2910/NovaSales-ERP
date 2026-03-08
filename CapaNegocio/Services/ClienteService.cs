@@ -100,7 +100,6 @@ namespace CapaNegocio.Services
         }
         public List<ClienteListadoDto> ListarClientes(int? filtro = 1, bool minimal = false)
         {
-            // Usamos AsNoTracking() para mejorar el rendimiento en lecturas
             var query = _context.Clientes.AsNoTracking().AsQueryable();
 
             switch (filtro)
@@ -121,8 +120,6 @@ namespace CapaNegocio.Services
                 Id = c.Id,
                 Documento = c.Documento,
                 NombreCompleto = c.NombreCompleto,
-
-                // Si minimal es true, enviamos valores vacíos para ahorrar ancho de banda/procesamiento
                 Correo = minimal ? "" : c.Correo,
                 Telefono = minimal ? "" : c.Telefono,
                 Estado = minimal ? "" : (c.Estado ? "Activo" : "Inactivo")

@@ -191,7 +191,7 @@ namespace CapaPresentacion.Forms
             tbProveedorTelefono.Clear();
             btnGuardarProveedor.Text = "GUARDAR";
             btnEliminarProveedor.Text = "ELIMINAR";
-            btnEliminarProveedor.BorderColor = Color.FromArgb(45, 45, 45); // O el color dorado suave que uses
+            btnEliminarProveedor.BorderColor = Color.FromArgb(45, 45, 45);
             btnEliminarProveedor.ForeColor = Color.Gainsboro;
             btnEliminarProveedor.FillColor = Color.FromArgb(30, 30, 30);
             cbxFiltrar.SelectedIndex = 0;
@@ -342,7 +342,7 @@ namespace CapaPresentacion.Forms
                 {
                     row.DefaultCellStyle.BackColor = Color.FromArgb(35, 30, 15);
                     row.DefaultCellStyle.ForeColor = Color.FromArgb(212, 175, 55);
-                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20); // Un poco más claro al seleccionar
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20);
                     row.DefaultCellStyle.SelectionForeColor = Color.FromArgb(255, 215, 0);
                 }
                 else if (estado == "Inactivo")

@@ -88,14 +88,12 @@ namespace CapaPresentacion.Forms
             decimal precioVenta = 0;
             bool producto_existe = false;
 
-            // 1. Validar que se haya seleccionado un producto
             if (int.Parse(tbIdProducto.Text) == 0)
             {
                 MessageBox.Show("Debe seleccionar un producto primero", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            // 2. Validar formato de precios (usando decimal.TryParse para evitar crashes)
             if (!decimal.TryParse(tbCompraPrecioCompra.Text, out precioCompra))
             {
                 MessageBox.Show("Precio Compra - Formato de moneda incorrecto", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -114,7 +112,6 @@ namespace CapaPresentacion.Forms
                 MessageBox.Show("El precio de compra debe ser mayor a 0", "Mensaje", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            // Recorremos la grilla para ver si el ID ya existe
             foreach (DataGridViewRow fila in dgvCompras.Rows)
             {
                 if (fila.Cells["IdProducto"].Value != null && fila.Cells["IdProducto"].Value.ToString() == tbIdProducto.Text)
@@ -137,7 +134,7 @@ namespace CapaPresentacion.Forms
                 Image iconoEliminar = Properties.Resources.delete;
 
                 dgvCompras.Rows.Add(new object[] {
-                iconoEditar, // Espacio para el botón Seleccionar (si es imagen/icono)
+                iconoEditar,
                 tbIdProducto.Text,
                 tbCompraCodProducto.Text,
                 tbCompraProducto.Text,
@@ -145,7 +142,7 @@ namespace CapaPresentacion.Forms
                 precioVenta.ToString("0.00"),
                 updCompraCantidad.Value.ToString(),
                 subtotal.ToString("0.00"),
-                iconoEliminar // Espacio para el botón Eliminar (si es imagen/icono)
+                iconoEliminar
                 });
 
                 enModoEdicion = false;
@@ -203,7 +200,7 @@ namespace CapaPresentacion.Forms
                 var fila = dgvCompras.Rows[e.RowIndex];
 
                 datosProductoOriginal = new object[] {
-                fila.Cells[0].Value, // Mantiene el icono de editar
+                fila.Cells[0].Value,
                 fila.Cells["IdProducto"].Value.ToString(),
                 fila.Cells["Codigo"].Value.ToString(),
                 fila.Cells["Producto"].Value.ToString(),
@@ -211,7 +208,7 @@ namespace CapaPresentacion.Forms
                 fila.Cells["PrecioVenta"].Value.ToString(),
                 fila.Cells["Cantidad"].Value.ToString(),
                 fila.Cells["SubTotal"].Value.ToString(),
-                fila.Cells[8].Value  // Mantiene el icono de eliminar
+                fila.Cells[8].Value 
                 };
                 enModoEdicion = true;
 
@@ -317,9 +314,9 @@ namespace CapaPresentacion.Forms
                         nuevaCompra.Detalles.Add(new DetalleCompraCreateDto()
                         {
                             ProductoId = Convert.ToInt32(row.Cells[1].Value),
-                            ProductoNombre = row.Cells[3].Value.ToString(),// Usamos índice en vez de nombre
+                            ProductoNombre = row.Cells[3].Value.ToString(),
                             PrecioCompra = Convert.ToDecimal(row.Cells[4].Value),
-                            PrecioVenta = Convert.ToDecimal(row.Cells[5].Value), // <-- Forzamos la columna 5
+                            PrecioVenta = Convert.ToDecimal(row.Cells[5].Value),
                             Cantidad = Convert.ToInt32(row.Cells[6].Value),
                             MontoTotal = Convert.ToDecimal(row.Cells[7].Value)
                         });

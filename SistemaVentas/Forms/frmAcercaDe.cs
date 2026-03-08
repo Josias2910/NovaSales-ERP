@@ -20,8 +20,6 @@ namespace CapaPresentacion.Forms
         {
             string id = SeguridadHardware.ObtenerHardwareID();
             lbNumeroSerie.Text = id;
-
-            // Si sigue fallando, es que el control se llama distinto o está siendo pisado
             Console.WriteLine("ID Detectado: " + id);
         }
     }

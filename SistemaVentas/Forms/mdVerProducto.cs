@@ -31,7 +31,7 @@ namespace CapaPresentacion.Forms
                 using (var context = new AppDbContext())
                 {
                     var service = new ProductoService(context);
-                    var p = service.GetByCodigo(_codigo); // Necesitas este método que traiga todo el objeto
+                    var p = service.GetByCodigo(_codigo);
 
                     if (p != null)
                     {
@@ -49,7 +49,7 @@ namespace CapaPresentacion.Forms
                         }
                         else
                         {
-                            picImagenProducto.Image = null; // O null
+                            picImagenProducto.Image = null;
                         }
                     }
                 }

@@ -26,7 +26,6 @@ namespace SistemaVentas
             Graphics mgraphics = e.Graphics;
             Pen pen = new Pen(Color.FromArgb(31, 31, 31), 1);
             Rectangle area = new Rectangle(0, 0, this.Width, this.Height);
-            // Esto crea un degradado suave de arriba a abajo
             LinearGradientBrush lgb = new LinearGradientBrush(area, Color.FromArgb(45, 45, 48), Color.FromArgb(31, 31, 31), LinearGradientMode.Vertical);
             mgraphics.FillRectangle(lgb, area);
             mgraphics.DrawRectangle(pen, area);

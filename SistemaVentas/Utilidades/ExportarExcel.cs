@@ -31,7 +31,6 @@ namespace CapaPresentacion.Utilidades
                     {
                         var worksheet = workbook.Worksheets.Add("Reporte");
 
-                        // 1. Cabeceras (Solo las visibles y con texto)
                         int colVisibleIndex = 1;
                         for (int i = 0; i < dgv.Columns.Count; i++)
                         {
@@ -40,12 +39,11 @@ namespace CapaPresentacion.Utilidades
                                 var cell = worksheet.Cell(1, colVisibleIndex);
                                 cell.Value = dgv.Columns[i].HeaderText;
                                 cell.Style.Font.Bold = true;
-                                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#D4AF37"); // Tu dorado
+                                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#D4AF37");
                                 colVisibleIndex++;
                             }
                         }
 
-                        // 2. Datos
                         for (int r = 0; r < dgv.Rows.Count; r++)
                         {
                             colVisibleIndex = 1;
@@ -86,7 +84,6 @@ namespace CapaPresentacion.Utilidades
                     {
                         var ws = workbook.Worksheets.Add("Resumen General");
 
-                        // --- 1. CABECERA PRINCIPAL ---
                         ws.Cell("A1").Value = "SISTEMA DE VENTAS - NOVASALES";
                         ws.Range("A1:F1").Merge().Style.Font.Bold = true;
                         ws.Range("A1:F1").Style.Font.FontSize = 16;
@@ -96,14 +93,11 @@ namespace CapaPresentacion.Utilidades
                         ws.Range("A2:F2").Merge().Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                         ws.Range("A2:F2").Style.Font.FontColor = XLColor.Gray;
 
-                        // --- 2. SECCIÓN DE TARJETAS (FLOWLAYOUT PANELS) ---
-                        // Definimos una base de estilo para los encabezados de sección
                         var headerStyle = workbook.Style;
                         headerStyle.Font.Bold = true;
                         headerStyle.Fill.BackgroundColor = XLColor.FromHtml("#1E1E1E");
                         headerStyle.Font.FontColor = XLColor.White;
 
-                        // COLUMNA A-B: VENTAS Y RENTABILIDAD
                         ws.Cell("A4").Value = "RESUMEN DE VENTAS";
                         ws.Range("A4:B4").Merge().Style = headerStyle;
                         ws.Cell(5, 1).Value = "Total Ventas:"; ws.Cell(5, 2).Value = datos.TotalVentas;
@@ -117,7 +111,6 @@ namespace CapaPresentacion.Utilidades
                         ws.Cell(12, 1).Value = "ROI:"; ws.Cell(12, 2).Value = (datos.PorcentajeROI / 100);
                         ws.Cell(13, 1).Value = "Top Producto:"; ws.Cell(13, 2).Value = datos.ProductoMasVendido;
 
-                        // COLUMNA D-E: COMPRAS Y CLIENTES
                         ws.Cell("D4").Value = "RESUMEN DE COMPRAS";
                         ws.Range("D4:E4").Merge().Style = headerStyle;
                         ws.Cell(5, 4).Value = "Total Compras:"; ws.Cell(5, 5).Value = datos.TotalCompras;
@@ -131,7 +124,6 @@ namespace CapaPresentacion.Utilidades
                         ws.Cell(12, 4).Value = "Clientes Únicos:"; ws.Cell(12, 5).Value = datos.CantidadClientes;
                         ws.Cell(13, 4).Value = "Pago Preferido:"; ws.Cell(13, 5).Value = datos.MetodoPagoPreferido;
 
-                        // --- 3. SECCIÓN DE DATOS DEL GRÁFICO (EVOLUCIÓN DIARIA) ---
                         ws.Cell("A16").Value = "EVOLUCIÓN DIARIA (DATOS DEL GRÁFICO)";
                         ws.Range("A16:C16").Merge().Style = headerStyle;
                         ws.Range("A16:C16").Style.Fill.BackgroundColor = XLColor.FromHtml("#D4AF37");
@@ -149,15 +141,12 @@ namespace CapaPresentacion.Utilidades
                             ws.Cell(fila, 3).Value = datos.ComprasPorDia[i];
                         }
 
-                        // --- 4. FORMATOS FINALES ---
-                        // Formato de Moneda para dinero
                         ws.Range("B5:B5").Style.NumberFormat.Format = "$ #,##0.00";
                         ws.Range("B11:B11").Style.NumberFormat.Format = "$ #,##0.00";
                         ws.Range("E5:E5").Style.NumberFormat.Format = "$ #,##0.00";
                         ws.Range("E11:E11").Style.NumberFormat.Format = "$ #,##0.00";
                         ws.Range("B18:C" + (18 + datos.EtiquetasDias.Count)).Style.NumberFormat.Format = "$ #,##0.00";
 
-                        // Formato de Porcentaje
                         ws.Cell(7, 2).Style.NumberFormat.Format = "0.0%";
                         ws.Cell(12, 2).Style.NumberFormat.Format = "0.0%";
 

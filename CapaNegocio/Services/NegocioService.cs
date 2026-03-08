@@ -17,13 +17,10 @@ namespace CapaNegocio.Services
             _context = context;
         }
 
-        // Cambiamos Registrar por un método que guarde o actualice (Upsert)
         public bool GuardarCambios(NegocioCreateDto dto)
         {
-            // Traemos TODOS los registros de negocio que existan
             var todosLosNegocios = _context.Negocios.ToList();
 
-            // Tomamos el primero como el "oficial"
             var negocioPrincipal = todosLosNegocios.FirstOrDefault();
 
             if (negocioPrincipal == null)
@@ -33,12 +30,10 @@ namespace CapaNegocio.Services
             }
             else if (todosLosNegocios.Count > 1)
             {
-                // --- LIMPIEZA: Si hay duplicados, borramos los demás ---
-                var duplicados = todosLosNegocios.Skip(1); // Todos menos el primero
+                var duplicados = todosLosNegocios.Skip(1); 
                 _context.Negocios.RemoveRange(duplicados);
             }
 
-            // Mapeamos los datos (Tu lógica actual que está perfecta)
             negocioPrincipal.Nombre = dto.Nombre;
             negocioPrincipal.CUIT = dto.CUIT;
             negocioPrincipal.Direccion = dto.Direccion;
@@ -57,17 +52,16 @@ namespace CapaNegocio.Services
             var negocio = _context.Negocios.FirstOrDefault();
             if (negocio != null)
             {
-                negocio.Logo = null; // Así se elimina realmente en EF Core
+                negocio.Logo = null;
                 return _context.SaveChanges() > 0;
             }
             return false;
         }
 
-        // Necesitarás este método para cargar el formulario al iniciar
         public NegocioCreateDto ListarDatos()
         {
             var n = _context.Negocios.FirstOrDefault();
-            if (n == null) return new NegocioCreateDto(); // Devuelve uno vacío si no hay nada
+            if (n == null) return new NegocioCreateDto();
 
             return new NegocioCreateDto
             {
@@ -86,14 +80,12 @@ namespace CapaNegocio.Services
         {
             try
             {
-                // Buscamos el registro de configuración
                 var negocio = _context.Negocios.FirstOrDefault();
 
                 if (negocio != null)
                 {
-                    // Guardamos los dos datos clave
-                    negocio.Licencia = llaveCompleta;       // Ej: "ABC123XYZ-20261231"
-                    negocio.FechaVencimiento = fechaVence;  // El objeto DateTime real
+                    negocio.Licencia = llaveCompleta;
+                    negocio.FechaVencimiento = fechaVence;
 
                     _context.Entry(negocio).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                     return _context.SaveChanges() > 0;

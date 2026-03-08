@@ -177,7 +177,7 @@ namespace CapaPresentacion.Forms
             tbProductoNombre.Clear();
             btnProductoGuardar.Text = "GUARDAR";
             btnProductoEliminar.Text = "ELIMINAR";
-            btnProductoEliminar.BorderColor = Color.FromArgb(45, 45, 45); // O el color dorado suave que uses
+            btnProductoEliminar.BorderColor = Color.FromArgb(45, 45, 45);
             btnProductoEliminar.ForeColor = Color.Gainsboro;
             btnProductoEliminar.FillColor = Color.FromArgb(30, 30, 30);
             dgvProductos.ClearSelection();
@@ -333,22 +333,18 @@ namespace CapaPresentacion.Forms
 
                     if (stock == 0)
                     {
-                        // Rojo intenso para advertencia crítica
                         celdaStock.Style.BackColor = Color.FromArgb(192, 57, 43);
                         celdaStock.Style.ForeColor = Color.White;
-                        celdaStock.Style.SelectionBackColor = Color.FromArgb(231, 76, 60); // Color cuando está seleccionado
+                        celdaStock.Style.SelectionBackColor = Color.FromArgb(231, 76, 60);
                     }
                     else if (stock < 10)
                     {
-                        // Naranja para advertencia preventiva
                         celdaStock.Style.BackColor = Color.FromArgb(211, 84, 0);
                         celdaStock.Style.ForeColor = Color.White;
                         celdaStock.Style.SelectionBackColor = Color.FromArgb(230, 126, 34);
                     }
                     else
                     {
-                        // Si tiene stock normal, nos aseguramos de que herede el estilo de la fila
-                        // Esto es importante para que al editar un producto el color se limpie si sube el stock
                         celdaStock.Style.BackColor = Color.Empty;
                         celdaStock.Style.ForeColor = Color.Empty;
                     }

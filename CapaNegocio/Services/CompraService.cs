@@ -22,12 +22,9 @@ namespace CapaNegocio.Services
             {
                 try
                 {
-                    // 1. Obtenemos el Punto de Venta configurado
                     var negocio = _context.Negocios.FirstOrDefault();
                     int ptoVenta = negocio?.PuntoVenta ?? 1;
 
-                    // 2. Buscamos la última compra para generar el correlativo
-                    // Filtramos las que empiecen con nuestro punto de venta
                     var ultimaCompra = _context.Compras
                         .Where(c => c.NumeroDocumento.StartsWith(ptoVenta.ToString("D4")))
                         .OrderByDescending(c => c.Id)
@@ -38,7 +35,6 @@ namespace CapaNegocio.Services
 
                     if (!string.IsNullOrEmpty(ultimaCompra))
                     {
-                        // Usamos LastIndexOf por si el nombre del negocio o algo raro tuviera otro guion
                         int posicionGuion = ultimaCompra.LastIndexOf('-');
 
                         if (posicionGuion != -1)
@@ -53,18 +49,17 @@ namespace CapaNegocio.Services
 
                     string numeroDocumentoFinal = $"{ptoVenta:D4}-{nuevoCorrelativo:D8}";
                     dto.NumeroDocumento = numeroDocumentoFinal;
-                    // 3. Mapeo y Guardado
+
                     var compraEntity = new Compra
                     {
                         UsuarioId = dto.UsuarioId,
                         ProveedorId = dto.ProveedorId,
                         TipoDocumento = dto.TipoDocumento,
-                        NumeroDocumento = numeroDocumentoFinal, // El número "Real"
+                        NumeroDocumento = numeroDocumentoFinal, 
                         MetodoPago = dto.MetodoPago,
                         MontoTotal = dto.MontoTotal,
                         Estado = true,
                         FechaRegistro = DateTime.Now,
-                        // Aquí iría el mapeo de DetallesCompra si lo haces manual o con AutoMapper
                     };
 
                     compraEntity.DetallesCompra = dto.Detalles.Select(d => new DetalleCompra
@@ -72,22 +67,18 @@ namespace CapaNegocio.Services
                         ProductoId = d.ProductoId,
                         Cantidad = d.Cantidad,
                         PrecioCompra = d.PrecioCompra,
-                        PrecioVenta = d.PrecioVenta, // Si lo manejas en la compra
+                        PrecioVenta = d.PrecioVenta,
                         MontoTotal = d.MontoTotal
                     }).ToList();
 
                     foreach (var det in compraEntity.DetallesCompra)
                     {
-                        // 1. Buscamos el producto en la base de datos
                         var producto = _context.Productos.FirstOrDefault(p => p.Id == det.ProductoId);
 
                         if (producto != null)
                         {
-                            // 2. ACTUALIZAMOS PRECIOS (Siempre el último valor ingresado)
                             producto.PrecioCompra = det.PrecioCompra;
                             producto.PrecioVenta = det.PrecioVenta;
-
-                            // 3. ACTUALIZAMOS STOCK (Sumamos lo que compramos)
                             producto.Stock += det.Cantidad;
                         }
                     }
@@ -158,7 +149,6 @@ namespace CapaNegocio.Services
             {
                 try
                 {
-                    // Traemos la compra con sus detalles
                     var compra = _context.Compras
                         .Include(c => c.DetallesCompra)
                         .FirstOrDefault(c => c.Id == idCompra);
@@ -175,21 +165,16 @@ namespace CapaNegocio.Services
                         return false;
                     }
 
-                    // 1. REVERSIÓN DE STOCK
-                    // Como la compra se "cancela", debemos restar lo que entró.
                     foreach (var detalle in compra.DetallesCompra)
                     {
                         var producto = _context.Productos.Find(detalle.ProductoId);
                         if (producto != null)
                         {
                             producto.Stock -= detalle.Cantidad;
-
-                            // Seguridad: Evitar stock negativo si ya se vendió parte de esa compra
                             if (producto.Stock < 0) producto.Stock = 0;
                         }
                     }
 
-                    // 2. BORRADO LÓGICO
                     compra.Estado = false;
 
                     _context.SaveChanges();
@@ -218,9 +203,8 @@ namespace CapaNegocio.Services
 
         public CompraDetalleDto ObtenerDetalle(string nroDocumento)
         {
-            // Buscamos la compra con todos sus datos relacionados
             var c = _context.Compras
-                .AsNoTracking() // Optimización para lectura
+                .AsNoTracking()
                 .Include(c => c.Proveedor)
                 .Include(c => c.Usuario)
                 .Include(c => c.DetallesCompra)
@@ -229,19 +213,17 @@ namespace CapaNegocio.Services
 
             if (c == null) return null;
 
-            // Mapeamos manualmente a tu CompraDetalleDto
             return new CompraDetalleDto
             {
                 TipoDocumento = c.TipoDocumento,
                 NumeroDocumento = c.NumeroDocumento,
-                MetodoPago = c.MetodoPago, // Aquí se mapea el medio de pago que mencionaste
+                MetodoPago = c.MetodoPago,
                 MontoTotal = c.MontoTotal,
                 FechaRegistro = c.FechaRegistro.ToString("dd/MM/yyyy HH:mm"),
                 UsuarioNombre = c.Usuario.NombreCompleto,
                 DocumentoProveedor = c.Proveedor.Documento,
                 RazonSocial = c.Proveedor.RazonSocial,
 
-                // Mapeamos la lista de detalles
                 Detalles = c.DetallesCompra.Select(d => new DetalleCompraCreateDto
                 {
                     ProductoId = d.ProductoId,

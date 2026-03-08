@@ -24,21 +24,19 @@ namespace CapaPresentacion.Forms
         public frmNegocio()
         {
             InitializeComponent();
-            // Suscribimos los eventos manualmente para no depender solo del diseñador
             VincularEventosCambio();
         }
 
         private void frmNegocio_Load(object sender, EventArgs e)
         {
             CargarDatosNegocio();
-            btnGuardarNegocio.Enabled = false; // Inicia desactivado
+            btnGuardarNegocio.Enabled = false;
             datosCargados = true;
             GenerarLivePreview();
         }
 
         private void VincularEventosCambio()
         {
-            // Vinculamos todos los controles al mismo manejador de eventos
             tbNegocioNombre.TextChanged += ControlModificado;
             tbNegocioRUC.TextChanged += ControlModificado;
             tbNegocioDireccion.TextChanged += ControlModificado;
@@ -53,8 +51,6 @@ namespace CapaPresentacion.Forms
         {
             ValidarCambiosReales();
 
-            // El preview lo dejamos que corra siempre que escriban 
-            // para que sea fluido, o puedes meterlo dentro de un if(huboCambios)
             ReiniciarTimerPreview();
         }
         private void CargarDatosNegocio()
@@ -93,7 +89,6 @@ namespace CapaPresentacion.Forms
         {
             if (!datosCargados || datosOriginales == null) return;
 
-            // Comparamos cada campo
             bool huboCambios =
                 tbNegocioNombre.Text != datosOriginales.Nombre ||
                 tbNegocioRUC.Text != datosOriginales.CUIT ||
@@ -104,14 +99,11 @@ namespace CapaPresentacion.Forms
                 tbNegocioLema.Text != datosOriginales.Lema ||
                 updNegocioPuntoVenta.Value != Convert.ToDecimal(datosOriginales.PuntoVenta);
 
-            // Si cambió el logo también podrías compararlo, pero con los textos suele bastar
             btnGuardarNegocio.Enabled = huboCambios;
         }
 
-        // --- MÉTODO MAESTRO: AQUÍ SE DEFINE EL DISEÑO ÚNICO DEL PDF ---
         private IDocument ObtenerDocumento()
         {
-            // Creamos un DTO de negocio con lo que hay actualmente en los TextBox
             var negocioPreview = new NegocioCreateDto
             {
                 Nombre = tbNegocioNombre.Text,
@@ -124,7 +116,6 @@ namespace CapaPresentacion.Forms
                 Logo = picLogo.Image != null ? ImagenHelper.ImageToByteArray(picLogo.Image) : null
             };
 
-            // Creamos una compra "Dummy" (de prueba) para el preview
             var compraPreview = new CompraCreateDto
             {
                 TipoDocumento = "BOLETA DE PRUEBA",
@@ -137,8 +128,6 @@ namespace CapaPresentacion.Forms
         }
             };
 
-            // LLAMAMOS DIRECTAMENTE A TU CLASE MAESTRA
-            // Así te aseguras que el diseño sea SIEMPRE el mismo
             return GeneradorReporte.CrearTicketCompra(negocioPreview, compraPreview);
         }
 
@@ -160,7 +149,6 @@ namespace CapaPresentacion.Forms
             }
         }
 
-        // --- LOGICA DE ACTUALIZACIÓN EN TIEMPO REAL ---
         private void ReiniciarTimerPreview()
         {
             timerDebounce.Stop();
@@ -182,13 +170,11 @@ namespace CapaPresentacion.Forms
         private void tbNegocioLema_TextChanged(object sender, EventArgs e) => ReiniciarTimerPreview();
         private void updNegocioPuntoVenta_ValueChanged(object sender, EventArgs e) => ReiniciarTimerPreview();
 
-        // --- BOTONES DE ACCIÓN ---
 
         private void btnGuardarNegocio_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Validaciones básicas
                 if (string.IsNullOrWhiteSpace(tbNegocioNombre.Text) || string.IsNullOrWhiteSpace(tbNegocioRUC.Text))
                 {
                     MessageBox.Show("Nombre y RUC son campos obligatorios.", "Validación", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -199,7 +185,6 @@ namespace CapaPresentacion.Forms
                 {
                     var negocioService = new NegocioService(context);
 
-                    // 2. Creamos el DTO con los datos de los controles
                     var dto = new NegocioCreateDto
                     {
                         Nombre = tbNegocioNombre.Text,
@@ -213,12 +198,10 @@ namespace CapaPresentacion.Forms
                         Logo = picLogo.Image != null ? ImagenHelper.ImageToByteArray(picLogo.Image) : null
                     };
 
-                    // 3. Ejecutamos la lógica (que ahora limpia duplicados internamente)
                     if (negocioService.GuardarCambios(dto))
                     {
                         MessageBox.Show("Configuración actualizada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        // 4. RECARGAR: Es vital para que si había basura, desaparezca de la pantalla
                         btnGuardarNegocio.Enabled = false;
                         CargarDatosNegocio();
                     }

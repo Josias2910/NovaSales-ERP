@@ -42,11 +42,9 @@ namespace CapaPresentacion.Forms
         }
         private void CargarDatosAlGrafico(ReporteResumenDto datos)
         {
-            // Limpiamos datos anteriores
             Func<ChartPoint, string> formateador = point => $"{point.Y:C2}";
             chartReporte.Series.Clear();
 
-            // LÍNEA DE VENTAS (Verde Neón)
             chartReporte.Series.Add(new LineSeries
             {
                 Title = "Ventas",
@@ -59,13 +57,12 @@ namespace CapaPresentacion.Forms
                     StartPoint = new System.Windows.Point(0, 0),
                     EndPoint = new System.Windows.Point(0, 1),
                     GradientStops = new System.Windows.Media.GradientStopCollection {
-                new System.Windows.Media.GradientStop(System.Windows.Media.Color.FromArgb(50, 50, 205, 50), 0),
-                new System.Windows.Media.GradientStop(System.Windows.Media.Colors.Transparent, 1)
-            }
-                } // Esto le da un efecto de sombra degradada muy premium
+                    new System.Windows.Media.GradientStop(System.Windows.Media.Color.FromArgb(50, 50, 205, 50), 0),
+                    new System.Windows.Media.GradientStop(System.Windows.Media.Colors.Transparent, 1)
+                    }
+                }
             });
 
-            // LÍNEA DE COMPRAS (Naranja/Rojo)
             chartReporte.Series.Add(new LineSeries
             {
                 Title = "Compras",
@@ -73,22 +70,18 @@ namespace CapaPresentacion.Forms
                 LabelPoint = formateador,
                 Stroke = System.Windows.Media.Brushes.Tomato,
                 PointGeometrySize = 8,
-                Fill = System.Windows.Media.Brushes.Transparent // Solo la línea para no saturar
+                Fill = System.Windows.Media.Brushes.Transparent 
             });
 
-            // ETIQUETAS DEL EJE X
             chartReporte.AxisX[0].Labels = datos.EtiquetasDias;
         }
         private void ConfigurarGraficoInicial()
         {
-            // Colores de fondo y fuentes
             chartReporte.BackColor = Color.FromArgb(30, 30, 30);
             chartReporte.ForeColor = Color.White;
 
-            // Quitar leyendas para que se vea más limpio
             chartReporte.LegendLocation = LegendLocation.None;
 
-            // Configuración de los Ejes (Colores de las líneas de cuadrícula)
             chartReporte.AxisY.Add(new Axis
             {
                 Foreground = System.Windows.Media.Brushes.Gray,
@@ -98,7 +91,7 @@ namespace CapaPresentacion.Forms
             chartReporte.AxisX.Add(new Axis
             {
                 Foreground = System.Windows.Media.Brushes.Gray,
-                Separator = new Separator { IsEnabled = false } // Sin líneas verticales para más elegancia
+                Separator = new Separator { IsEnabled = false }
             });
         }
         private void LlenarTarjetaDinamica(FlowLayoutPanel fp, string titulo, string valor, Color colorValor, List<string> detalles)
@@ -106,10 +99,8 @@ namespace CapaPresentacion.Forms
             fp.Controls.Clear();
             fp.FlowDirection = FlowDirection.TopDown;
             fp.WrapContents = false;
-            // Un pequeño padding extra para que no pegue arriba
             fp.Padding = new Padding(10, 5, 10, 5);
 
-            // 1. TITULO
             fp.Controls.Add(new Label
             {
                 Text = titulo.ToUpper(),
@@ -118,7 +109,6 @@ namespace CapaPresentacion.Forms
                 AutoSize = true
             });
 
-            // 2. VALOR PRINCIPAL
             fp.Controls.Add(new Label
             {
                 Text = valor,
@@ -128,8 +118,6 @@ namespace CapaPresentacion.Forms
                 Margin = new Padding(0, 5, 0, 10)
             });
 
-            // 3. SEPARADOR (Línea sutil)
-            // Usamos fp.Width - 25 para que no cause scroll horizontal
             Panel line = new Panel
             {
                 Size = new Size(fp.Width - 25, 1),
@@ -138,7 +126,6 @@ namespace CapaPresentacion.Forms
             };
             fp.Controls.Add(line);
 
-            // 4. DETALLES
             foreach (var d in detalles)
             {
                 fp.Controls.Add(new Label
@@ -153,7 +140,6 @@ namespace CapaPresentacion.Forms
         }
         private void CargarDashboard()
         {
-            // 1. Validación de fechas
             if (dtpFechaInicio.Value.Date > dtpFechaFin.Value.Date)
             {
                 MessageBox.Show("La fecha de inicio no puede ser mayor a la fecha fin.",
@@ -168,9 +154,8 @@ namespace CapaPresentacion.Forms
                 using (var context = new AppDbContext())
                 {
                     var service = new ReporteService(context);
-                    // Importante: .Date para ignorar las horas en la búsqueda
                     var datos = service.ObtenerResumen(dtpFechaInicio.Value.Date, dtpFechaFin.Value.Date);
-                    _ultimosDatosCargados = datos; // <--- Guarda la referencia aquí
+                    _ultimosDatosCargados = datos;
                     ActualizarInterfaz(datos);
                 }
             }
@@ -192,7 +177,6 @@ namespace CapaPresentacion.Forms
         {
             chartReporte.Series.Clear();
 
-            // Aseguramos que el eje X exista y limpiamos sus etiquetas
             if (chartReporte.AxisX.Count > 0)
             {
                 chartReporte.AxisX[0].Labels = datos.EtiquetasDias;
@@ -207,7 +191,7 @@ namespace CapaPresentacion.Forms
             // VENTAS
             LlenarTarjetaDinamica(flowVentas, "Ventas Totales", datos.TotalVentas.ToString("C2"), Color.LimeGreen, new List<string> {
             $"{datos.CantidadVentas} ventas realizadas",
-            FormatearTendencia(datos.VariacionVentas), // <--- DINÁMICO
+            FormatearTendencia(datos.VariacionVentas),
             $"Pago pref: {datos.MetodoPagoPreferido}",
             $"Pico: {datos.DiaPicoVenta}"
             });
@@ -215,7 +199,6 @@ namespace CapaPresentacion.Forms
             // COMPRAS
             LlenarTarjetaDinamica(flowCompras, "Compras Totales", datos.TotalCompras.ToString("C2"), Color.Tomato, new List<string> {
             $"{datos.CantidadCompras} facturas de compra",
-            // Agregamos esto (necesitarás agregar VariacionCompras al DTO y al Service)
             FormatearTendencia(datos.VariacionCompras),
             $"Prov. Principal: {datos.ProveedorPrincipal}",
             $"{datos.ProductosBajoStock} productos bajo stock"
@@ -224,7 +207,6 @@ namespace CapaPresentacion.Forms
             // GANANCIA
             decimal margen = datos.TotalVentas > 0 ? (datos.GananciaNeta / datos.TotalVentas) * 100 : 0;
 
-            // Determinamos el estatus basado en el margen
             string estatusFinanciero = "Estatus: Crítico";
             if (margen > 30) estatusFinanciero = "Estatus: Muy Rentable";
             else if (margen > 10) estatusFinanciero = "Estatus: Rentable";
@@ -241,7 +223,7 @@ namespace CapaPresentacion.Forms
             // TICKET
             LlenarTarjetaDinamica(flowTicket, "Ticket Promedio", datos.PromedioTicketVenta.ToString("C2"), Color.Gold, new List<string> {
             $"{datos.CantidadClientes} clientes únicos",
-            FormatearTendencia(datos.VariacionTicket), // <--- DINÁMICO
+            FormatearTendencia(datos.VariacionTicket),
             $"{datos.ArticulosPorTicket:N1} prod. p/ticket",
             datos.VariacionTicket >= 0 ? "Estado: Creciendo" : "Estado: Revisar precios"
             });

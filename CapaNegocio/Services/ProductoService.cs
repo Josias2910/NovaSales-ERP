@@ -79,7 +79,6 @@ namespace CapaNegocio.Services
                 Codigo = p.Codigo,
                 Nombre = p.Nombre,
                 Categoria = p.Categoria.Descripcion,
-                // Si minimal es true, mandamos null o vacío a lo que no necesitamos
                 Descripcion = minimal ? "" : p.Descripcion,
                 Stock = minimal ? 0 : p.Stock,
                 PrecioCompra = minimal ? 0 : p.PrecioCompra,
@@ -209,7 +208,7 @@ namespace CapaNegocio.Services
                 var producto = _context.Productos.Find(idProducto);
                 if (producto != null)
                 {
-                    producto.Imagen = null; // Seteamos a null en la BD
+                    producto.Imagen = null;
                     _context.SaveChanges();
                     return true;
                 }
@@ -224,7 +223,6 @@ namespace CapaNegocio.Services
         }
         public byte[] ObtenerImagen(int idProducto)
         {
-            // Buscamos solo la propiedad Imagen para no sobrecargar la memoria
             return _context.Productos
                 .Where(p => p.Id == idProducto)
                 .Select(p => p.Imagen)

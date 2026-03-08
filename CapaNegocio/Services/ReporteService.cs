@@ -17,7 +17,6 @@ namespace CapaNegocio.Services
             _context = context;
         }
 
-        // --- 1. REPORTE DE VENTAS ---
         public List<ReporteVentaDto> ObtenerVentas(DateTime fechaInicio, DateTime fechaFin, string metodoPago)
         {
             var query = _context.Ventas
@@ -28,7 +27,6 @@ namespace CapaNegocio.Services
             .ThenInclude(d => d.Producto)
             .Where(v => v.FechaRegistro.Date >= fechaInicio.Date && v.FechaRegistro.Date <= fechaFin.Date);
 
-            // FILTRO NUEVO: Si no elige "Todos", filtramos por el método seleccionado
             if (metodoPago != "Todos")
             {
                 query = query.Where(v => v.MetodoPago == metodoPago);
@@ -47,12 +45,10 @@ namespace CapaNegocio.Services
                 MontoPago = v.MontoPago,
                 MontoCambio = v.MontoCambio,
                 MontoTotal = v.MontoTotal,
-                // Tu lógica de ganancia impecable
                 GananciaVenta = v.MontoTotal - v.DetallesVenta.Sum(d => d.Cantidad * d.Producto.PrecioCompra)
             }).ToList();
         }
 
-        // --- 2. REPORTE DE COMPRAS ---
         public List<ReporteCompraDto> ObtenerCompras(DateTime fechaInicio, DateTime fechaFin, int idProveedor = 0)
         {
             var query = _context.DetallesCompra
@@ -66,7 +62,6 @@ namespace CapaNegocio.Services
                 .Where(d => d.Compra.FechaRegistro.Date >= fechaInicio.Date &&
                             d.Compra.FechaRegistro.Date <= fechaFin.Date);
 
-            // Filtro por Proveedor (si seleccionan uno específico en el combo)
             if (idProveedor != 0)
             {
                 query = query.Where(d => d.Compra.ProveedorId == idProveedor);
@@ -88,11 +83,10 @@ namespace CapaNegocio.Services
                 PrecioCompra = d.PrecioCompra,
                 PrecioVenta = d.PrecioVenta,
                 Cantidad = d.Cantidad,
-                SubTotal = d.Cantidad * d.PrecioCompra// O d.Cantidad * d.PrecioCompra
+                SubTotal = d.Cantidad * d.PrecioCompra
             }).ToList();
         }
 
-        // --- 3. REPORTE DE STOCK ---
         public List<ReporteStockDto> ObtenerStock()
         {
             return _context.Productos
@@ -110,10 +104,8 @@ namespace CapaNegocio.Services
                 }).ToList();
         }
 
-        // --- 4. REPORTE RESUMEN (DASHBOARD) ---
         public ReporteResumenDto ObtenerResumen(DateTime fechaInicio, DateTime fechaFin)
         {
-            // 1. Traemos las ventas y compras del periodo (usamos ToList para no castigar a la DB con múltiples consultas)
             var ventasActual = _context.Ventas
                 .AsNoTracking()
                 .Include(v => v.Cliente)
@@ -138,7 +130,6 @@ namespace CapaNegocio.Services
                 .Where(v => v.FechaRegistro.Date >= inicioAnterior.Date && v.FechaRegistro.Date <= finAnterior.Date)
                 .ToList();
 
-            // 3. Totales y Tickets para Variaciones
             decimal totalComprasActual = comprasActual.Sum(c => c.MontoTotal);
             decimal totalComprasAnterior = comprasAnterior.Sum(c => c.MontoTotal);
 
@@ -148,7 +139,6 @@ namespace CapaNegocio.Services
             decimal ticketActual = ventasActual.Count > 0 ? totalActual / ventasActual.Count : 0;
             decimal ticketAnterior = ventasAnterior.Count > 0 ? totalAnterior / ventasAnterior.Count : 0;
 
-            // 2. Cálculo del Producto Estrella (Más vendido por cantidad)
             var productoEstrella = _context.DetallesVenta
         .AsNoTracking()
         .Include(d => d.Producto)
@@ -158,39 +148,33 @@ namespace CapaNegocio.Services
         .Select(g => new { Nombre = g.Key, Total = g.Sum(x => x.Cantidad) })
         .FirstOrDefault();
 
-            // 3. Cálculo del Cliente Frecuente
             var clienteFrecuente = ventasActual
         .GroupBy(v => v.Cliente?.NombreCompleto ?? "Anónimo")
         .OrderByDescending(g => g.Count())
         .Select(g => g.Key).FirstOrDefault() ?? "N/A";
 
-            // 4. Cálculo del Método de Pago Preferido
             var metodoPreferido = ventasActual
                 .GroupBy(v => v.MetodoPago)
                 .OrderByDescending(g => g.Count())
                 .Select(g => g.Key)
                 .FirstOrDefault() ?? "N/A";
 
-            // Cambia la línea que te dio el error por esta:
             var provPrincipal = comprasActual
         .Where(c => c.Proveedor != null)
         .GroupBy(c => c.Proveedor.RazonSocial)
         .OrderByDescending(g => g.Sum(x => x.MontoTotal))
         .Select(g => g.Key).FirstOrDefault() ?? "Sin Proveedor";
 
-            // Cantidad de artículos promedio por ticket
             var totalArticulos = _context.DetallesVenta
         .Where(d => d.Venta.FechaRegistro >= fechaInicio && d.Venta.FechaRegistro <= fechaFin)
         .Sum(d => (int?)d.Cantidad) ?? 0;
 
-            // Día con más ventas
             var diaPico = ventasActual
         .GroupBy(v => v.FechaRegistro.Date)
         .OrderByDescending(g => g.Sum(x => x.MontoTotal))
         .Select(g => new { Fecha = g.Key.ToShortDateString(), Monto = g.Sum(x => x.MontoTotal) })
         .FirstOrDefault();
 
-            // 5. Armamos el DTO final con TODA la lógica
             var resumen = new ReporteResumenDto
             {
                 TotalVentas = totalActual,
@@ -223,7 +207,6 @@ namespace CapaNegocio.Services
                 resumen.EtiquetasDias.Add(fecha.ToString("dd/MM"));
             }
 
-            // 4. FINALMENTE DEVOLVEMOS EL OBJETO YA LLENO
             return resumen;
         }
         private decimal CalcularVariacion(decimal actual, decimal anterior)
@@ -254,7 +237,6 @@ namespace CapaNegocio.Services
                 MontoTotal = venta.MontoTotal,
                 MontoPago = venta.MontoPago,
                 MontoCambio = venta.MontoCambio,
-                // Mapeamos la lista de detalles usando tu DetalleVentaCreateDto
                 Detalles = venta.DetallesVenta.Select(d => new DetalleVentaCreateDto
                 {
                     ProductoNombre = d.Producto.Nombre,
@@ -276,7 +258,6 @@ namespace CapaNegocio.Services
         }
         public decimal ObtenerTotalInversionMesAnterior()
         {
-            // Calculamos el rango del mes pasado
             DateTime inicioMesPasado = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1).AddMonths(-1);
             DateTime finMesPasado = inicioMesPasado.AddMonths(1).AddDays(-1);
 

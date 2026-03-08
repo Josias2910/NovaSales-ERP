@@ -43,9 +43,6 @@ namespace CapaPresentacion
                 DateTime? fechaVence = negocio.FechaVencimiento;
                 DateTime? ultimaVezAbierto = negocio.UltimaConexion;
 
-                // --- TRAMPA PARA EL RELOJ (ANTI-CHEAT) ---
-                // Si la fecha actual es anterior a la última vez que se usó el programa, 
-                // significa que el usuario atrasó el reloj de Windows.
                 if (ultimaVezAbierto.HasValue && DateTime.Now < ultimaVezAbierto.Value)
                 {
                     MessageBox.Show("Se ha detectado una inconsistencia en la fecha del sistema.\n" +
@@ -55,32 +52,27 @@ namespace CapaPresentacion
                     return;
                 }
 
-                // Si la fecha es coherente, actualizamos la 'UltimaConexion' para la próxima vez
                 negocio.UltimaConexion = DateTime.Now;
                 context.SaveChanges();
 
-                // 1. Verificamos si la licencia existe y tiene el formato correcto (HASH-FECHA)
                 if (string.IsNullOrEmpty(licenciaEnBD) || !licenciaEnBD.Contains("-"))
                 {
                     AbrirFormActivacion();
                     return;
                 }
 
-                // 2. Extraemos la fecha de la licencia para re-validar el HASH
                 string[] partes = licenciaEnBD.Split('-');
                 if (partes.Length < 2) { AbrirFormActivacion(); return; }
                 string hashEnBD = partes[0];
                 string fechaStr = partes[1];
                 string hashEsperado = Utilidades.SeguridadHardware.GenerarHashConFecha(idPC, fechaStr);
 
-                // 3. ¿La licencia fue manipulada o es de otra PC?
                 if (hashEnBD != hashEsperado)
                 {
                     AbrirFormActivacion();
                     return;
                 }
 
-                // 4. CONTROL DE FECHA: ¿Ya expiró la suscripción?
                 if (fechaVence.HasValue && DateTime.Now.Date > fechaVence.Value.Date)
                 {
                     MessageBox.Show("Su suscripción ha expirado. Por favor, renueve su licencia.",
@@ -88,17 +80,14 @@ namespace CapaPresentacion
 
                     AbrirFormActivacion();
 
-                    // IMPORTANTE: Si llegamos acá es porque el usuario cerró el form de activación.
-                    // Debemos verificar si activó con éxito o cerrar la app.
                     Application.Exit();
-                    return; // Evita que siga cualquier ejecución posterior
+                    return;
                 }
 
                 if (fechaVence.HasValue)
                 {
                     lbVencimiento.Text = $"Licencia válida hasta: {fechaVence.Value.ToString("dd/MM/yyyy")}";
 
-                    // Alerta visual si faltan 5 días o menos
                     if ((fechaVence.Value.Date - DateTime.Now.Date).TotalDays <= 5)
                     {
                         lbVencimiento.ForeColor = Color.DarkRed;
@@ -155,7 +144,6 @@ namespace CapaPresentacion
             {
                 if (frm.ShowDialog() == DialogResult.OK)
                 {
-                    // Si activó una nueva llave, refrescamos la validación
                     ValidarProteccionHardware();
                     MessageBox.Show("Licencia actualizada correctamente.", "NovaSales", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

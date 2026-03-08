@@ -62,7 +62,6 @@ namespace CapaPresentacion.Forms
                 return;
             }
 
-            // Armamos: "0001" + "-" + "00000005"
             string nroBuscar = $"{cbxPuntoVenta.Text}-{tbNumeroDocumento.Text.PadLeft(8, '0')}";
 
             using (var context = new AppDbContext())
@@ -96,7 +95,6 @@ namespace CapaPresentacion.Forms
                         });
                     }
 
-                    // Habilitamos los botones de acción
                     btnExportarPDF.Enabled = true;
                     btnExportarExcel.Enabled = true;
                 }
@@ -114,7 +112,6 @@ namespace CapaPresentacion.Forms
         }
         private void LimpiarCampos()
         {
-            // Borramos todos los TextBoxes de información
             tbDetalleFecha.Text = "";
             tbDetalleTipoDoc.Text = "";
             tbDetalleUsuario.Text = "";
@@ -122,8 +119,6 @@ namespace CapaPresentacion.Forms
             tbDocumentoCliente.Text = "";
             tbNombreCliente.Text = "";
             tbMontoTotal.Text = "0.00";
-
-            // Vaciamos la grilla
             dgvDetalleVenta.Rows.Clear();
         }
 

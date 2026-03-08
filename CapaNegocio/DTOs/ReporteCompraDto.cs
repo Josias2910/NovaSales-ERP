@@ -17,7 +17,7 @@ namespace CapaNegocio.DTOs
         public string DocumentoProveedor { get; set; }
         public string RazonSocial { get; set; }
 
-        // Datos del Detalle del Producto (Para que la grilla sea completa)
+        // Datos del Detalle del Producto
         public string CodigoProducto { get; set; }
         public string NombreProducto { get; set; }
         public string Categoria { get; set; }

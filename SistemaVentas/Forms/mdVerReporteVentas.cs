@@ -35,17 +35,14 @@ namespace CapaPresentacion.Forms
                     var detalle = service.ObtenerDetalleVentaCompleto(_idVentaRecibido);
                     if (detalle != null)
                     {
-                        // Llenamos los TextBox superiores
                         tbVentaDetalleFecha.Text = detalle.FechaRegistro;
                         tbVentaDetalleTipoDoc.Text = detalle.TipoDocumento;
                         tbVentaDetalleNroDoc.Text = detalle.NumeroDocumento;
                         tbVentaDetalleCliente.Text = $"{detalle.DocumentoCliente} - {detalle.NombreCliente}";
                         tbVentaDetalleVendedor.Text = detalle.UsuarioNombre;
 
-                        // La grilla se llena sola con la lista de detalles
                         dgvDetalleVenta.DataSource = detalle.Detalles;
 
-                        // El Total en grande
                         lbMontoTotal.Text = detalle.MontoTotal.ToString("C2");
                     }
                 }

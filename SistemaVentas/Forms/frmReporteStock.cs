@@ -40,7 +40,6 @@ namespace CapaPresentacion.Forms
         {
             if (listaActual == null) return;
 
-            // --- 1. ACTUALIZAR LABELS PRINCIPALES ---
             lbTotalArticulos.Text = listaActual.Count.ToString();
             lbTotalStock.Text = listaActual.Sum(x => x.MontoTotalStock).ToString("C2");
             lbAgotados.Text = listaActual.Count(x => x.Stock <= 0).ToString();
@@ -51,24 +50,20 @@ namespace CapaPresentacion.Forms
                                     .FirstOrDefault();
             lbCategoriaTop.Text = topCat?.Key ?? "-";
 
-            // --- 2. ACTUALIZAR FLOWLAYOUTPANEL (DASHBOARD DINÁMICO) ---
             flowLayoutPanel1.Controls.Clear();
             flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel1.WrapContents = false;
             flowLayoutPanel1.AutoScroll = true;
 
-            // Cálculo de Margen Promedio sobre la lista actual
             decimal valorVentaTotal = listaActual.Sum(x => x.PrecioVenta * x.Stock);
             decimal gananciaTotal = listaActual.Sum(x => x.GananciaPotencialItem);
             decimal margenPorcentaje = valorVentaTotal > 0 ? (gananciaTotal / valorVentaTotal) * 100 : 0;
 
             AgregarIndicadorCustom("Margen Promedio", margenPorcentaje.ToString("N1") + "%", Color.Gold);
 
-            // Alertas de Reposición
             int paraReponer = listaActual.Count(x => x.EsStockBajo && x.Stock > 0);
             AgregarIndicadorCustom("Para Reponer", paraReponer.ToString() + " productos", Color.Orange);
 
-            // Ítem más Caro
             var masCaro = listaActual.OrderByDescending(x => x.PrecioCompra).FirstOrDefault();
             if (masCaro != null)
             {
@@ -76,7 +71,6 @@ namespace CapaPresentacion.Forms
                 AgregarIndicadorCustom("Producto más Costoso", nombreProducto, Color.MediumPurple);
             }
 
-            // Espaciador final
             flowLayoutPanel1.Controls.Add(new Label { Text = " ", Height = 20 });
         }
         private void tbBuscarStock_TextChanged(object sender, EventArgs e)
@@ -95,14 +89,12 @@ namespace CapaPresentacion.Forms
 
         private void dgvReporteStock_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            // Supongamos que la columna Stock es la 3
             if (dgvReporteStock.Columns[e.ColumnIndex].Name == "Stock")
             {
-                // Obtenemos el objeto completo de la fila actual
                 var item = (ReporteStockDto)dgvReporteStock.Rows[e.RowIndex].DataBoundItem;
                 if (item.EsStockBajo)
                 {
-                    e.CellStyle.ForeColor = Color.Tomato; // Texto Rojo/Naranja
+                    e.CellStyle.ForeColor = Color.Tomato;
                     e.CellStyle.SelectionForeColor = Color.Tomato;
                 }
             }
@@ -116,7 +108,7 @@ namespace CapaPresentacion.Forms
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(35, 30, 15);
                 row.DefaultCellStyle.ForeColor = Color.FromArgb(212, 175, 55);
-                row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20); // Un poco más claro al seleccionar
+                row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(45, 40, 20);
                 row.DefaultCellStyle.SelectionForeColor = Color.FromArgb(255, 215, 0);
             }
             else
@@ -134,7 +126,7 @@ namespace CapaPresentacion.Forms
                 Text = titulo.ToUpper(),
                 AutoSize = true,
                 ForeColor = Color.DarkGray,
-                Font = new Font("Segoe UI", 7, FontStyle.Bold) // Un punto más chica para que no sature
+                Font = new Font("Segoe UI", 7, FontStyle.Bold)
             };
 
             Label lblVal = new Label
