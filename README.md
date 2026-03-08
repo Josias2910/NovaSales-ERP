@@ -38,7 +38,7 @@
 * **Configuración de Entorno:** El sistema incluye scripts de migración que configuran automáticamente la instancia local de **SQL Express** durante la instalación.
 
 ---
-Este código se publica exclusivamente con fines de exhibición de portafolio profesional y demostración de competencias técnicas. **No se otorga permiso para su copia, distribución o uso comercial.**
+
 ## 📜 Licencia y Propiedad
 **© 2026 Josias Schumacher - Todos los derechos reservados.**
 Este código se publica exclusivamente con fines de exhibición de portafolio profesional y demostración de competencias técnicas. **No se otorga permiso para su copia, distribución o uso comercial.**
