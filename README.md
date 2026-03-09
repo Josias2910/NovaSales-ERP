@@ -14,7 +14,7 @@
 ---
 
 ## 🛠️ Stack Tecnológico
-* **Lenguaje:** C# con .NET Framework 4.8.
+* **Lenguaje:** C# con .NET Framework.
 * **Arquitectura:** Diseño en **N-Capas** (Presentación, Negocio, Datos, Entidades) para máxima escalabilidad y mantenimiento.
 * **Persistencia:** Entity Framework Core / LINQ para consultas optimizadas.
 * **Base de Datos:** Microsoft SQL Server.
